@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portafolio Open Aster</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Soluciones de las empresas del portafolio Open Aster, comparables con un estándar común por categoría, área, KPI, tecnología y evidencia de impacto.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: encabezado con cifras, barra de filtros compartida, tres vistas (Soluciones / Comparar / Empresas) y una bandeja para comparar lado a lado */
+:root{
+  --bg:#f5f7fa; --surface:#ffffff; --surface-2:#eef2f7; --border:#d9e0ea;
+  --text:#16202d; --muted:#586579; --accent:#1f5fbf; --accent-soft:#e3ecfa; --on-accent:#ffffff;
+  --prod:#1f5fbf; --prod-soft:#e3ecfa;
+  --seg:#a84a0c; --seg-soft:#fbe9da;
+  --sus:#1b7443; --sus-soft:#dcf1e4;
+  --exit:#6b3fb5; --exit-soft:#eee6fa;
+  --none:#586579; --none-soft:#eceff3;
+  --font-body:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-display:"Space Grotesk",Inter,system-ui,sans-serif;
+  --shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e131a; --surface:#161d27; --surface-2:#1e2733; --border:#2b3644;
+    --text:#e5eaf1; --muted:#9aa6b8; --accent:#7fb0ff; --accent-soft:#1b2b44; --on-accent:#0e131a;
+    --prod:#8ab8ff; --prod-soft:#1b2b44; --seg:#f3a468; --seg-soft:#3a2617;
+    --sus:#6fd39a; --sus-soft:#153222; --exit:#c3a4f5; --exit-soft:#2b2140;
+    --none:#9aa6b8; --none-soft:#232c39; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e131a; --surface:#161d27; --surface-2:#1e2733; --border:#2b3644;
+  --text:#e5eaf1; --muted:#9aa6b8; --accent:#7fb0ff; --accent-soft:#1b2b44; --on-accent:#0e131a;
+  --prod:#8ab8ff; --prod-soft:#1b2b44; --seg:#f3a468; --seg-soft:#3a2617;
+  --sus:#6fd39a; --sus-soft:#153222; --exit:#c3a4f5; --exit-soft:#2b2140;
+  --none:#9aa6b8; --none-soft:#232c39; --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:15px/1.5 var(--font-body);-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;letter-spacing:-.01em}
+header{padding-block:28px 6px}
+header .row{align-items:flex-start}
+header h1{font-size:28px;margin:0 0 4px}
+header p{margin:0;color:var(--muted);max-width:68ch}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:18px 0 4px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px}
+.stat b{display:block;font:600 22px/1.2 var(--font-display);font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:13px}
+
+.tabs{display:flex;gap:4px;margin-top:18px;border-bottom:1px solid var(--border);overflow-x:auto}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;cursor:pointer;color:var(--muted);font-weight:500;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--text);border-bottom-color:var(--accent)}
+
+.controls{position:sticky;top:env(safe-area-inset-top, 0px);z-index:5;background:var(--bg);padding-block:12px;border-bottom:1px solid var(--border)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:var(--bg)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.search{flex:1 1 260px;position:relative;min-width:0}
+.search input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font:inherit}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted)}
+select{padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font:inherit;font-size:14px;max-width:100%;min-width:0}
+.chiprow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
+.chiprow .lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-right:2px}
+.chip{border:1px solid var(--border);background:var(--surface);border-radius:999px;padding:4px 11px;font-size:13px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chip .n{opacity:.7;margin-left:4px;font-variant-numeric:tabular-nums}
+.sep{width:1px;height:20px;background:var(--border);margin:0 6px}
+.btn-link{background:none;border:0;color:var(--accent);font-size:13px;cursor:pointer;padding:4px}
+.result-line{color:var(--muted);font-size:13px;margin:14px 0 10px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+
+/* Soluciones */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding-bottom:40px}
+.card{min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;position:relative}
+.card:hover{border-color:var(--accent)}
+.card .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.card .company{font-size:13px;color:var(--muted);font-weight:500}
+.card h3{margin:0;font-size:16px;line-height:1.3}
+.card h3 button{background:none;border:0;padding:0;text-align:left;cursor:pointer;font:inherit}
+.card h3 button::after{content:"";position:absolute;inset:0;border-radius:12px}
+.card p{margin:0;color:var(--muted);font-size:13.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.card .tags{margin-top:auto}
+.tag{font-size:12px;border-radius:6px;padding:2px 8px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--surface-2);color:var(--muted)}
+.tag.kpi{background:none;border:1px solid var(--border)}
+.cat{font-weight:600}
+.cat-Productividad{background:var(--prod-soft);color:var(--prod)}
+.cat-Seguridad{background:var(--seg-soft);color:var(--seg)}
+.cat-Sustentabilidad{background:var(--sus-soft);color:var(--sus)}
+.cat-Exits{background:var(--exit-soft);color:var(--exit)}
+.cat-none{background:var(--none-soft);color:var(--none)}
+.ev{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);white-space:nowrap}
+.ev i{display:inline-flex;gap:2px}
+.ev i::before,.ev i::after,.ev i span{content:"";width:6px;height:10px;border-radius:2px;background:var(--border);display:block}
+.ev[data-l="Media"] i::before,.ev[data-l="Alta"] i::before,.ev[data-l="Alta"] i span,.ev[data-l="Media"] i span,.ev[data-l="Baja"] i::before{background:var(--accent)}
+.ev[data-l="Baja"] i span{background:var(--border)}
+.ev[data-l="Alta"] i::after{background:var(--accent)}
+.cmp{position:relative;z-index:1;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);cursor:pointer;background:none;border:1px solid var(--border);border-radius:6px;padding:2px 8px}
+.cmp[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.card .bottom{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.empty{text-align:center;color:var(--muted);padding:60px 0;grid-column:1/-1}
+
+/* Comparar */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;min-width:0}
+.panel h2{font-size:18px;margin:0 0 4px}
+.panel .hint{color:var(--muted);font-size:13.5px;margin:0 0 12px;max-width:80ch}
+.matrix-wrap{overflow-x:auto}
+table.matrix{border-collapse:separate;border-spacing:2px;font-size:13px;min-width:100%}
+.matrix th{font-weight:500;color:var(--muted);text-align:left;padding:6px 8px;vertical-align:bottom}
+.matrix thead th{text-align:center;max-width:120px;line-height:1.25}
+.matrix tbody th{white-space:nowrap;color:var(--text)}
+.matrix td{text-align:center;font-variant-numeric:tabular-nums;padding:0;min-width:54px}
+.matrix td button{width:100%;min-height:36px;border:0;border-radius:4px;cursor:pointer;font-weight:600;background:var(--cell);color:var(--cell-ink)}
+.matrix td button[data-v="0"]{cursor:default;color:var(--muted);font-weight:400}
+.matrix td button[aria-pressed="true"]{outline:2px solid var(--text);outline-offset:-2px}
+.matrix td.tot{color:var(--muted);text-align:left;padding-left:8px;min-width:120px}
+.bar{display:flex;align-items:center;gap:6px}
+.bar span{display:block;height:8px;border-radius:0 4px 4px 0;background:var(--accent);min-width:2px}
+.legend{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:10px;flex-wrap:wrap}
+.legend .ramp{display:flex;gap:2px}
+.legend .ramp b{width:22px;height:12px;border-radius:2px;display:block}
+.cell-list{margin-top:14px;border-top:1px solid var(--border);padding-top:12px}
+.cell-list h3{font-size:15px;margin:0 0 8px}
+.mini{display:flex;flex-wrap:wrap;gap:6px}
+.mini button{border:1px solid var(--border);background:var(--surface-2);border-radius:8px;padding:5px 10px;font-size:13px;cursor:pointer;text-align:left}
+.mini button b{font-weight:600}
+.mini button:hover{border-color:var(--accent)}
+.std-def{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px 20px;font-size:13.5px}
+.std-def h4{margin:0 0 4px;font-size:13px}
+.std-def p{margin:0;color:var(--muted)}
+
+/* Empresas */
+.table-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:40px}
+table.emp{border-collapse:collapse;width:100%;font-size:13.5px}
+.emp th,.emp td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+.emp th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;white-space:nowrap;background:var(--surface)}
+.emp th button{background:none;border:0;padding:0;cursor:pointer;text-transform:inherit;letter-spacing:inherit;font-weight:inherit;color:inherit}
+.emp th button[data-dir]::after{content:attr(data-dir);margin-left:4px}
+.emp td.num{font-variant-numeric:tabular-nums;text-align:right}
+.emp tr:last-child td{border-bottom:0}
+.emp .name{font-weight:600;background:none;border:0;padding:0;cursor:pointer;text-align:left;color:var(--accent)}
+.emp .tags{min-width:130px}
+.emp .tag{font-size:11.5px;white-space:normal}
+.emp .cmp{white-space:nowrap}
+.emp th,.emp td{padding:9px 10px}
+
+/* Bandeja de comparación */
+.tray{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--border);box-shadow:0 -4px 16px rgba(0,0,0,.08);padding-bottom:env(safe-area-inset-bottom, 0px)}
+.tray .wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-block:10px}
+.tray .items{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+.tray .it{background:var(--surface-2);border-radius:6px;padding:3px 4px 3px 9px;font-size:13px;display:inline-flex;align-items:center;gap:4px;max-width:260px}
+.tray .it span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tray .it button{background:none;border:0;cursor:pointer;color:var(--muted);padding:0 4px;font-size:15px}
+.btn{background:var(--accent);color:var(--on-accent);border:0;border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer}
+.btn[disabled]{opacity:.45;cursor:default}
+body.has-tray{padding-bottom:70px}
+
+/* Diálogos */
+dialog{border:0;padding:0;border-radius:14px;max-width:780px;width:calc(100% - 32px);max-height:calc(100% - 32px);background:var(--surface);color:var(--text);box-shadow:0 20px 50px rgba(0,0,0,.3)}
+dialog.wide{max-width:1180px}
+dialog::backdrop{background:rgba(10,15,25,.55)}
+.d-head{padding:18px 22px 14px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1}
+.d-head .company{color:var(--muted);font-size:13px;font-weight:500}
+.d-head h2{margin:2px 0 8px;font-size:21px;line-height:1.25;padding-right:40px}
+.d-close{position:absolute;right:14px;top:14px;border:0;background:var(--surface-2);width:32px;height:32px;border-radius:8px;font-size:18px;cursor:pointer}
+.d-body{padding:6px 22px 22px}
+.field{padding:11px 0;border-bottom:1px solid var(--border)}
+.field:last-child{border-bottom:0}
+.field h4{margin:0 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+.field>div{white-space:pre-line}
+.na{color:var(--muted);font-style:italic}
+.std-box{background:var(--surface-2);border-radius:10px;padding:10px 12px;margin:12px 0 4px;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px;align-items:start}
+.std-box dt{color:var(--muted);white-space:nowrap}
+.std-box dd{margin:0}
+.d-links{display:flex;flex-wrap:wrap;gap:14px;font-size:14px}
+.note{background:var(--seg-soft);border-radius:8px;padding:8px 12px;font-size:13px;margin-top:10px}
+.cmp-wrap{overflow-x:auto;padding:0 22px 22px}
+table.side{border-collapse:collapse;width:100%;font-size:13.5px;table-layout:fixed;min-width:640px}
+.side th,.side td{padding:10px;border-bottom:1px solid var(--border);vertical-align:top;text-align:left}
+.side tbody th{width:170px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}
+.side thead th{font-family:var(--font-display);font-size:15px;position:sticky;top:0;background:var(--surface)}
+.side thead th small{display:block;font:500 12.5px var(--font-body);color:var(--muted)}
+.side tr.group th{padding-top:18px;color:var(--text);font-size:12.5px;border-bottom:2px solid var(--border)}
+.side td{white-space:pre-line}
+.tag.common{background:var(--accent);color:var(--on-accent)}
+.cmp-legend{font-size:12.5px;color:var(--muted);padding:10px 22px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+footer{color:var(--muted);font-size:12.5px;padding-block:0 30px}
+[hidden]{display:none!important}
+@media (max-width:640px){
+  header h1{font-size:23px}
+  .controls{position:static}
+  .controls select{flex:1 1 45%}
+  .grid{grid-template-columns:minmax(0,1fr)}
+  .sep{display:none}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="row" style="justify-content:space-between">
+      <h1>Portafolio Open Aster</h1>
+      <button class="btn-link" id="themeBtn" type="button">Cambiar tema</button>
+    </div>
+    <p>Soluciones de las empresas aceleradas por Aster, de la 1era a la 8va expedición, clasificadas con un estándar común para compararlas.</p>
+    <div class="stats" id="stats"></div>
+    <nav class="tabs" role="tablist" aria-label="Vistas">
+      <button class="tab" role="tab" id="tab-soluciones" data-view="soluciones" type="button">Soluciones</button>
+      <button class="tab" role="tab" id="tab-comparar" data-view="comparar" type="button">Comparar por categorías</button>
+      <button class="tab" role="tab" id="tab-empresas" data-view="empresas" type="button">Empresas</button>
+    </nav>
+  </header>
+
+  <section class="controls" aria-label="Filtros">
+    <div class="row">
+      <label class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Buscar empresa, solución, problema, KPI…" aria-label="Buscar">
+      </label>
+      <select id="f-exp" aria-label="Expedición"></select>
+      <select id="f-emp" aria-label="Empresa"></select>
+      <select id="f-area" aria-label="Área estándar"></select>
+      <select id="f-kpi" aria-label="KPI estándar"></select>
+      <select id="f-tec" aria-label="Tecnología"></select>
+    </div>
+    <div class="chiprow">
+      <span class="lbl">Categoría</span><span id="f-cat" class="row" style="gap:6px"></span>
+      <span class="sep"></span>
+      <span class="lbl">Evidencia</span><span id="f-ev" class="row" style="gap:6px"></span>
+      <button class="btn-link" id="clear" type="button">Limpiar filtros</button>
+    </div>
+  </section>
+
+  <section id="view-soluciones" role="tabpanel" aria-labelledby="tab-soluciones">
+    <div class="result-line"><span id="count"></span><span>Marca <b>Comparar</b> en 2 a 4 soluciones para verlas lado a lado.</span></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="view-comparar" role="tabpanel" aria-labelledby="tab-comparar" hidden>
+    <div class="panel" style="margin-top:16px">
+      <h2>Matriz comparativa</h2>
+      <p class="hint">Cruza dos dimensiones del estándar. Cada celda cuenta las soluciones (o empresas) que cumplen ambas; una solución puede aparecer en más de una fila si toca varias áreas, KPIs o tecnologías. Haz clic en una celda para ver cuáles son.</p>
+      <div class="row" style="margin-bottom:12px">
+        <label class="row" style="gap:6px;font-size:13.5px">Filas <select id="m-rows"></select></label>
+        <label class="row" style="gap:6px;font-size:13.5px">Columnas <select id="m-cols"></select></label>
+        <label class="row" style="gap:6px;font-size:13.5px">Contar <select id="m-measure"><option value="sol">Soluciones</option><option value="emp">Empresas</option></select></label>
+      </div>
+      <div class="matrix-wrap"><table class="matrix" id="matrix"></table></div>
+      <div class="legend" id="m-legend"></div>
+      <div class="cell-list" id="cell-list" hidden></div>
+    </div>
+    <div class="panel">
+      <h2>Cómo se construye el estándar</h2>
+      <p class="hint">Los textos de cada ficha vienen escritos de forma distinta por cada empresa. Para compararlas, cada solución se clasifica en las mismas listas cerradas a partir de sus propios campos.</p>
+      <div class="std-def" id="std-def"></div>
+    </div>
+  </section>
+
+  <section id="view-empresas" role="tabpanel" aria-labelledby="tab-empresas" hidden>
+    <div class="result-line"><span id="emp-count"></span><span>Ordena por columna. Marca <b>Comparar</b> en 2 a 4 empresas para verlas lado a lado.</span></div>
+    <div class="table-wrap"><table class="emp" id="emp-table"></table></div>
+  </section>
+
+  <footer>Fuente: fichas públicas de asteraceleradora.com. Datos en <code>data/soluciones.csv</code>; la clasificación estándar se genera con <code>scripts/estandarizar.py</code>.</footer>
+</div>
+
+<div class="tray" id="tray" hidden>
+  <div class="wrap">
+    <strong id="tray-title" style="font-size:14px"></strong>
+    <div class="items" id="tray-items"></div>
+    <button class="btn-link" id="tray-clear" type="button">Quitar todo</button>
+    <button class="btn" id="tray-go" type="button">Comparar</button>
+  </div>
+</div>
+
+<dialog id="detail" aria-labelledby="d-title">
+  <div class="d-head">
+    <button class="d-close" type="button" aria-label="Cerrar" data-close>×</button>
+    <div class="company" id="d-company"></div>
+    <h2 id="d-title"></h2>
+    <div class="tags" id="d-tags"></div>
+  </div>
+  <div class="d-body" id="d-body"></div>
+</dialog>
+
+<dialog id="compare" class="wide" aria-labelledby="c-title">
+  <div class="d-head">
+    <button class="d-close" type="button" aria-label="Cerrar" data-close>×</button>
+    <h2 id="c-title">Comparación lado a lado</h2>
+  </div>
+  <div class="cmp-legend"><span class="tag common">Así</span> se marcan las clasificaciones que comparten todos los elementos comparados.</div>
+  <div class="cmp-wrap" id="c-body"></div>
+</dialog>
+
+<script>
+// El sitio lee este CSV. Para actualizar los datos, reemplaza el archivo (ver README).
+const DATA_URL = 'data/soluciones.csv';
+
+const FIELDS = ['Variable de Mejora','Área que aplica','Problema que Resuelve','Descripción Técnica / Solución','Beneficios','Tipo de KPI Impactado','Métrica de Impacto Cuantitativa','Línea Base'];
+const CATS = ['Productividad','Seguridad','Sustentabilidad','Exits'];
+const EV_ORDER = ['Alta','Media','Baja'];
+// Dimensiones del estándar: clave interna, nombre visible, cómo leerla de una fila y su orden
+const DIMS = {
+  cat:  {label:'Categoría', get:r=>r._cats, order:[...CATS,'Sin categoría']},
+  exp:  {label:'Expedición', get:r=>[r['Expedición']], sort:(a,b)=>expNum(a)-expNum(b)},
+  area: {label:'Área estándar', get:r=>r._area},
+  kpi:  {label:'KPI estándar', get:r=>r._kpi},
+  tec:  {label:'Tecnología', get:r=>r._tec},
+  ev:   {label:'Evidencia de impacto', get:r=>[r._ev], order:EV_ORDER},
+};
+const STD_HELP = [
+  ['Categoría','La categoría con que Aster publica a la empresa: Productividad, Seguridad, Sustentabilidad o Exits.'],
+  ['Área estándar','Agrupa el campo "Área que aplica" en 7 áreas de la operación minera: Mina y extracción, Planta y procesos, Mantenimiento y activos, Logística y abastecimiento, Seguridad y salud, Personas y gestión, y Medio ambiente, agua y energía.'],
+  ['KPI estándar','Agrupa "Tipo de KPI", "Variable de Mejora" y la métrica en 9 familias de indicador: Seguridad, Disponibilidad y continuidad, Productividad y producción, Costos y valor económico, Calidad y recuperación, Energía y emisiones, Agua y residuos, Gestión/tiempo/cumplimiento, y Personas y bienestar.'],
+  ['Tecnología','Lee la "Descripción Técnica" y marca la base tecnológica: IA y analítica, Visión computacional, Sensores e IoT, Software y plataformas, Realidad virtual, Drones y robótica, o Ingeniería, materiales y química.'],
+  ['Evidencia de impacto','Mide qué tan respaldado está el impacto declarado. Alta: métrica con cifras y línea base. Media: métrica con cifras sin línea base. Baja: sin métrica cuantitativa.'],
+];
+
+const $ = id => document.getElementById(id);
+const norm = s => (s||'').toString().normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const esc = s => (s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const expNum = e => parseInt(e,10) || 99;
+const splitList = (s,re=/[,;]/) => (s||'').split(re).map(x=>x.trim()).filter(Boolean);
+const uniq = a => [...new Set(a)];
+
+let rows = [];
+const state = {q:'', exp:'', emp:'', area:'', kpi:'', tec:'', cats:new Set(), evs:new Set(), view:'soluciones',
+  mRows:'kpi', mCols:'cat', measure:'sol', cell:null, sortKey:'exp', sortDir:1, cmpType:null, cmp:[]};
+
+// ---------- Tema ----------
+(function(){
+  let t=null; try{t=localStorage.getItem('aster-theme')}catch(e){}
+  if(t) document.documentElement.dataset.theme=t;
+  $('themeBtn').onclick=()=>{
+    const cur=document.documentElement.dataset.theme;
+    const dark = cur ? cur==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    const next = dark?'light':'dark';
+    document.documentElement.dataset.theme=next;
+    try{localStorage.setItem('aster-theme',next)}catch(e){}
+  };
+})();
+
+// ---------- Datos ----------
+function parseCSV(text){
+  text = text.replace(/^﻿/,'');
+  const out=[]; let row=[], f='', q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else if(c==='"') q=true;
+    else if(c===','){ row.push(f); f=''; }
+    else if(c==='\n'||c==='\r'){ if(c==='\r'&&text[i+1]==='\n') i++; row.push(f); out.push(row); row=[]; f=''; }
+    else f+=c;
+  }
+  if(f!==''||row.length){ row.push(f); out.push(row); }
+  const head=out.shift().map(h=>h.trim());
+  return out.filter(r=>r.some(v=>v.trim())).map(r=>Object.fromEntries(head.map((h,i)=>[h,(r[i]||'').trim()])));
+}
+function catsOf(r){ const c=splitList(r['Categoría (sitio)']).filter(x=>CATS.includes(x)); return c.length?c:['Sin categoría']; }
+function std(r,col,fallback){ const v=splitList(r[col],/;/); return v.length?v:[fallback]; }
+
+async function load(){
+  try{
+    const res = await fetch(DATA_URL,{cache:'no-cache'});
+    if(!res.ok) throw new Error(res.status);
+    rows = parseCSV(await res.text()).filter(r=>r['Empresa']).map((r,i)=>{
+      r._id=i; r._cats=catsOf(r);
+      r._area=std(r,'Área estándar','Sin clasificar');
+      r._kpi=std(r,'KPI estándar','Sin clasificar');
+      r._tec=std(r,'Tecnología','Sin clasificar');
+      r._ev=(r['Evidencia de impacto']||'').trim()||'Sin clasificar';
+      r._pending=FIELDS.every(f=>!(r[f]||'').trim());
+      r._text=norm([r['Empresa'],r['Solución'],r['Expedición'],r['Categoría (sitio)'],...FIELDS.map(f=>r[f]),r['Área estándar'],r['KPI estándar'],r['Tecnología']].join(' '));
+      return r;
+    }).sort((a,b)=>expNum(a['Expedición'])-expNum(b['Expedición'])||a['Empresa'].localeCompare(b['Empresa'],'es'));
+    buildStaticControls(); route(); update();
+  }catch(e){
+    $('grid').innerHTML='<div class="empty">No se pudo cargar <code>data/soluciones.csv</code>. Si abriste el archivo directo desde tu computador, ábrelo desde GitHub Pages o con un servidor local (ver README).</div>';
+  }
+}
+
+// ---------- Filtros ----------
+function matches(r,skip){
+  if(skip!=='exp'&&state.exp&&r['Expedición']!==state.exp) return false;
+  if(skip!=='emp'&&state.emp&&r['Empresa']!==state.emp) return false;
+  if(skip!=='area'&&state.area&&!r._area.includes(state.area)) return false;
+  if(skip!=='kpi'&&state.kpi&&!r._kpi.includes(state.kpi)) return false;
+  if(skip!=='tec'&&state.tec&&!r._tec.includes(state.tec)) return false;
+  if(skip!=='cat'&&state.cats.size&&!r._cats.some(c=>state.cats.has(c))) return false;
+  if(skip!=='ev'&&state.evs.size&&!state.evs.has(r._ev)) return false;
+  if(state.q){ const t=norm(state.q).split(/\s+/).filter(Boolean); if(!t.every(x=>r._text.includes(x))) return false; }
+  return true;
+}
+const filtered = () => rows.filter(r=>matches(r));
+function counts(list,fn){ const m=new Map(); list.forEach(r=>uniq(fn(r)).forEach(k=>m.set(k,(m.get(k)||0)+1))); return m; }
+function dimValues(key,list=rows){
+  const d=DIMS[key]; let vals=uniq(list.flatMap(d.get));
+  if(d.order) vals=d.order.filter(v=>vals.includes(v)).concat(vals.filter(v=>!d.order.includes(v)));
+  else if(d.sort) vals.sort(d.sort);
+  else { const c=counts(rows,d.get); vals.sort((a,b)=>(c.get(b)||0)-(c.get(a)||0)||a.localeCompare(b,'es')); }
+  return vals;
+}
+function fillSelect(el,label,key,getter,current,sorter){
+  const c=counts(rows.filter(r=>matches(r,key)),getter);
+  let vals=key==='emp'?[...c.keys()].sort((a,b)=>a.localeCompare(b,'es')):dimValues(key);
+  if(sorter) vals.sort(sorter);
+  el.innerHTML=`<option value="">${label}</option>`+vals.map(v=>`<option value="${esc(v)}"${v===current?' selected':''}${c.get(v)?'':' disabled'}>${esc(v)} (${c.get(v)||0})</option>`).join('');
+}
+function chips(el,key,getter,values,set){
+  const c=counts(rows.filter(r=>matches(r,key)),getter);
+  el.innerHTML=values.map(v=>`<button type="button" class="chip" data-v="${esc(v)}" aria-pressed="${set.has(v)}">${esc(v)}<span class="n">${c.get(v)||0}</span></button>`).join('');
+}
+function buildControls(){
+  fillSelect($('f-exp'),'Todas las expediciones','exp',r=>[r['Expedición']],state.exp);
+  fillSelect($('f-emp'),'Todas las empresas','emp',r=>[r['Empresa']],state.emp);
+  fillSelect($('f-area'),'Todas las áreas','area',r=>r._area,state.area);
+  fillSelect($('f-kpi'),'Todos los KPI','kpi',r=>r._kpi,state.kpi);
+  fillSelect($('f-tec'),'Todas las tecnologías','tec',r=>r._tec,state.tec);
+  chips($('f-cat'),'cat',r=>r._cats,dimValues('cat'),state.cats);
+  chips($('f-ev'),'ev',r=>[r._ev],dimValues('ev'),state.evs);
+  const any=state.q||state.exp||state.emp||state.area||state.kpi||state.tec||state.cats.size||state.evs.size;
+  $('clear').hidden=!any;
+}
+function buildStaticControls(){
+  const opts=Object.entries(DIMS).map(([k,d])=>`<option value="${k}">${d.label}</option>`).join('');
+  $('m-rows').innerHTML=opts; $('m-cols').innerHTML=opts;
+  $('m-rows').value=state.mRows; $('m-cols').value=state.mCols;
+  $('std-def').innerHTML=STD_HELP.map(([h,p])=>`<div><h4>${h}</h4><p>${p}</p></div>`).join('');
+}
+
+// ---------- Piezas comunes ----------
+function catTag(c){ return `<span class="tag cat ${CATS.includes(c)?'cat-'+c:'cat-none'}">${esc(c)}</span>`; }
+function evBadge(l){ return `<span class="ev" data-l="${esc(l)}" title="Evidencia de impacto: ${esc(l)}"><i><span></span></i>Evidencia ${esc(l.toLowerCase())}</span>`; }
+
+function renderStats(list){
+  const emp=new Set(list.map(r=>r['Empresa'])).size;
+  const alta=list.filter(r=>r._ev==='Alta').length;
+  $('stats').innerHTML=[
+    [list.length,'soluciones'],[emp,'empresas'],
+    ...['Productividad','Seguridad','Sustentabilidad'].map(c=>[list.filter(r=>r._cats.includes(c)).length,c.toLowerCase()]),
+    [list.length?Math.round(alta*100/list.length)+'%':'–','con evidencia alta'],
+  ].map(([n,l])=>`<div class="stat"><b>${n}</b><span>${l}</span></div>`).join('');
+}
+
+// ---------- Vista: Soluciones ----------
+function renderGrid(list){
+  $('count').textContent=list.length===rows.length?`Mostrando las ${rows.length} soluciones`:`${list.length} de ${rows.length} soluciones`;
+  $('grid').innerHTML=list.length?list.map(r=>{
+    const on=state.cmpType==='sol'&&state.cmp.includes(r._id);
+    return `<article class="card">
+      <div class="top"><span class="company">${esc(r['Empresa'])} · ${esc(r['Expedición'].replace(' Expedición',''))}</span><span class="tags">${r._cats.map(catTag).join('')}</span></div>
+      <h3><button type="button" data-open="${r._id}">${esc(r['Solución'])}</button></h3>
+      ${r._pending?'<p class="na">Detalle pendiente de cargar</p>':`<p>${esc(r['Problema que Resuelve'])}</p>`}
+      <div class="tags">${r._kpi.slice(0,3).map(k=>`<span class="tag kpi" title="KPI estándar">${esc(k)}</span>`).join('')}${r._area.slice(0,2).map(a=>`<span class="tag" title="Área estándar">${esc(a)}</span>`).join('')}</div>
+      <div class="bottom">${evBadge(r._ev)}<button type="button" class="cmp" data-cmp-sol="${r._id}" aria-pressed="${on}">${on?'✓ En comparación':'+ Comparar'}</button></div>
+    </article>`;}).join(''):'<div class="empty">No hay soluciones con estos filtros.</div>';
+}
+
+// ---------- Vista: Comparar ----------
+function renderMatrix(list){
+  const R=DIMS[state.mRows], C=DIMS[state.mCols];
+  const rv=dimValues(state.mRows,list), cv=dimValues(state.mCols,list);
+  const key=r=>state.measure==='emp'?r['Empresa']:r._id;
+  const cell={}, rowTot={}, colTot={};
+  list.forEach(r=>{
+    const rs=uniq(R.get(r)), cs=uniq(C.get(r));
+    rs.forEach(a=>{ (rowTot[a]??=new Set()).add(key(r));
+      cs.forEach(b=>{ (cell[a+'||'+b]??=new Set()).add(key(r)); }); });
+    cs.forEach(b=>(colTot[b]??=new Set()).add(key(r)));
+  });
+  const max=Math.max(1,...Object.values(cell).map(s=>s.size));
+  const rmax=Math.max(1,...Object.values(rowTot).map(s=>s.size));
+  const unit=state.measure==='emp'?'empresas':'soluciones';
+  // Rampa secuencial de un solo tono (acento), 5 pasos
+  const step=v=>v?Math.min(4,Math.floor((v/max)*4.999)):-1;
+  const mix=[14,30,48,68,88];
+  const style=v=>{const s=step(v); if(s<0) return '--cell:var(--surface-2);--cell-ink:var(--muted)';
+    return `--cell:color-mix(in srgb, var(--accent) ${mix[s]}%, var(--surface));--cell-ink:${s>=3?'var(--on-accent)':'var(--text)'}`;};
+  if(!rv.length||!cv.length){ $('matrix').innerHTML='<tr><td class="empty">No hay soluciones con estos filtros.</td></tr>'; $('m-legend').innerHTML=''; return; }
+  $('matrix').innerHTML=`<thead><tr><th scope="col">${esc(R.label)} \\ ${esc(C.label)}</th>${cv.map(c=>`<th scope="col">${esc(c)}</th>`).join('')}<th scope="col" style="text-align:left">Total ${unit}</th></tr></thead>
+  <tbody>${rv.map(a=>`<tr><th scope="row">${esc(a)}</th>${cv.map(b=>{const v=(cell[a+'||'+b]||new Set()).size; const k=a+'||'+b;
+    return `<td><button type="button" style="${style(v)}" data-v="${v}" data-cell="${esc(k)}" aria-pressed="${state.cell===k}" title="${esc(a)} × ${esc(b)}: ${v} ${unit}" ${v?'':'tabindex="-1"'}>${v||'·'}</button></td>`;}).join('')}
+    <td class="tot"><div class="bar"><span style="width:${Math.round((rowTot[a]?.size||0)/rmax*90)}px"></span>${rowTot[a]?.size||0}</div></td></tr>`).join('')}</tbody>
+  <tfoot><tr><th scope="row">Total</th>${cv.map(b=>`<td style="color:var(--muted)">${colTot[b]?.size||0}</td>`).join('')}<td class="tot">${new Set(list.map(key)).size} ${unit} distintas</td></tr></tfoot>`;
+  $('m-legend').innerHTML=`<span>Menos</span><span class="ramp">${mix.map(m=>`<b style="background:color-mix(in srgb, var(--accent) ${m}%, var(--surface))"></b>`).join('')}</span><span>Más ${unit} (máx. ${max} por celda)</span>`;
+  renderCellList(list);
+}
+function renderCellList(list){
+  const box=$('cell-list');
+  if(!state.cell){ box.hidden=true; return; }
+  const [a,b]=state.cell.split('||');
+  const hits=list.filter(r=>DIMS[state.mRows].get(r).includes(a)&&DIMS[state.mCols].get(r).includes(b));
+  if(!hits.length){ box.hidden=true; return; }
+  box.hidden=false;
+  const emps=uniq(hits.map(r=>r['Empresa']));
+  box.innerHTML=`<div class="row" style="justify-content:space-between"><h3>${esc(a)} × ${esc(b)}: ${hits.length} soluciones de ${emps.length} empresas</h3>
+    <button class="btn-link" type="button" id="cell-cmp">Comparar estas ${Math.min(hits.length,4)} soluciones</button></div>
+    <div class="mini">${hits.map(r=>`<button type="button" data-open="${r._id}"><b>${esc(r['Empresa'])}</b> · ${esc(r['Solución'])}</button>`).join('')}</div>`;
+  $('cell-cmp').onclick=()=>{ state.cmpType='sol'; state.cmp=hits.slice(0,4).map(r=>r._id); renderTray(); openCompare(); };
+}
+
+// ---------- Vista: Empresas ----------
+function companies(list){
+  const m=new Map();
+  list.forEach(r=>{ const e=m.get(r['Empresa'])||{name:r['Empresa'],exp:r['Expedición'],cats:new Set(),sols:[],area:new Set(),kpi:new Set(),tec:new Set(),ev:{Alta:0,Media:0,Baja:0},web:r['Sitio web'],ficha:r['Ficha en Aster']};
+    r._cats.forEach(c=>e.cats.add(c)); r._area.forEach(x=>e.area.add(x)); r._kpi.forEach(x=>e.kpi.add(x)); r._tec.forEach(x=>e.tec.add(x));
+    if(e.ev[r._ev]!=null) e.ev[r._ev]++; e.sols.push(r); m.set(r['Empresa'],e); });
+  return [...m.values()].map(e=>({...e, best:EV_ORDER.find(l=>e.ev[l])||'Baja', evScore:(e.ev.Alta*3+e.ev.Media*2+e.ev.Baja)/e.sols.length}));
+}
+const EMP_COLS=[
+  ['name','Empresa',e=>e.name], ['exp','Expedición',e=>expNum(e.exp)], ['cats','Categoría',e=>[...e.cats].join()],
+  ['n','Soluciones',e=>e.sols.length], ['area','Áreas',e=>e.area.size], ['kpi','KPI',e=>e.kpi.size], ['tec','Tecnologías',e=>e.tec.size], ['ev','Evidencia',e=>e.evScore],
+];
+function renderCompanies(list){
+  const cs=companies(list);
+  const col=EMP_COLS.find(c=>c[0]===state.sortKey)||EMP_COLS[1];
+  cs.sort((a,b)=>{const x=col[2](a),y=col[2](b); return (typeof x==='number'?x-y:String(x).localeCompare(String(y),'es'))*state.sortDir||a.name.localeCompare(b.name,'es');});
+  $('emp-count').textContent=`${cs.length} empresas`;
+  const tags=(set,cls='')=>`<div class="tags">${[...set].map(x=>`<span class="tag ${cls}">${esc(x)}</span>`).join('')}</div>`;
+  $('emp-table').innerHTML=`<thead><tr>${EMP_COLS.map(([k,l])=>`<th scope="col"><button type="button" data-sort="${k}" ${state.sortKey===k?`data-dir="${state.sortDir>0?'↑':'↓'}"`:''}>${l}</button></th>`).join('')}<th scope="col"><span class="sr">Comparar</span></th></tr></thead>
+  <tbody>${cs.map(e=>{const on=state.cmpType==='emp'&&state.cmp.includes(e.name);
+    return `<tr><td><button type="button" class="name" data-emp="${esc(e.name)}">${esc(e.name)}</button></td>
+    <td style="white-space:nowrap">${esc(e.exp.replace(' Expedición',''))}</td><td><div class="tags">${[...e.cats].map(catTag).join('')}</div></td>
+    <td class="num">${e.sols.length}</td><td>${tags(e.area)}</td><td>${tags(e.kpi,'kpi')}</td><td>${tags(e.tec)}</td>
+    <td style="white-space:nowrap">${evBadge(e.best)}<div style="font-size:12px;color:var(--muted)">${EV_ORDER.filter(l=>e.ev[l]).map(l=>`${e.ev[l]} ${l.toLowerCase()}`).join(' · ')}</div></td>
+    <td><button type="button" class="cmp" data-cmp-emp="${esc(e.name)}" aria-pressed="${on}">${on?'✓':'+ Comparar'}</button></td></tr>`;}).join('')}</tbody>`;
+}
+
+// ---------- Detalle ----------
+function openDetail(id){
+  const r=rows.find(x=>x._id==id); if(!r) return;
+  $('d-company').textContent=`${r['Empresa']} · ${r['Expedición']}`;
+  $('d-title').textContent=r['Solución'];
+  $('d-tags').innerHTML=r._cats.map(catTag).join('')+evBadge(r._ev);
+  const links=[];
+  if(r['Ficha en Aster']) links.push(`<a href="${esc(r['Ficha en Aster'])}" target="_blank" rel="noopener">Ficha en Aster ↗</a>`);
+  if(r['Sitio web']) links.push(`<a href="${esc(r['Sitio web'])}" target="_blank" rel="noopener">Sitio de ${esc(r['Empresa'])} ↗</a>`);
+  $('d-body').innerHTML=`<dl class="std-box"><dt>Área estándar</dt><dd>${esc(r._area.join(' · '))}</dd><dt>KPI estándar</dt><dd>${esc(r._kpi.join(' · '))}</dd><dt>Tecnología</dt><dd>${esc(r._tec.join(' · '))}</dd></dl>`+
+    (r._pending?'<div class="field"><div class="na">El detalle de esta solución todavía no está cargado.</div></div>'
+      :FIELDS.map(f=>`<div class="field"><h4>${esc(f)}</h4>${(r[f]||'').trim()?`<div>${esc(r[f])}</div>`:'<div class="na">Sin dato en la ficha</div>'}</div>`).join(''))+
+    `<div class="field"><div class="d-links">${links.join('')}</div>${r['Nota']?`<div class="note">${esc(r['Nota'])}</div>`:''}</div>`;
+  const d=$('detail'); if(!d.open) d.showModal(); d.scrollTop=0;
+}
+
+// ---------- Comparación lado a lado ----------
+function toggleCmp(type,id){
+  if(state.cmpType!==type){ state.cmpType=type; state.cmp=[]; }
+  const i=state.cmp.indexOf(id);
+  if(i>=0) state.cmp.splice(i,1); else if(state.cmp.length<4) state.cmp.push(id);
+  if(!state.cmp.length) state.cmpType=null;
+  renderTray(); render();
+}
+function renderTray(){
+  const n=state.cmp.length;
+  $('tray').hidden=!n; document.body.classList.toggle('has-tray',!!n);
+  if(!n) return;
+  const isSol=state.cmpType==='sol';
+  $('tray-title').textContent=`${n} ${isSol?(n>1?'soluciones':'solución'):(n>1?'empresas':'empresa')} (máx. 4)`;
+  $('tray-items').innerHTML=state.cmp.map(id=>{const lbl=isSol?(()=>{const r=rows.find(x=>x._id===id);return `${r['Empresa']} · ${r['Solución']}`;})():id;
+    return `<span class="it"><span>${esc(lbl)}</span><button type="button" aria-label="Quitar" data-untray="${esc(id)}">×</button></span>`;}).join('');
+  $('tray-go').disabled=n<2;
+}
+function openCompare(){
+  const isSol=state.cmpType==='sol';
+  const items=isSol?state.cmp.map(id=>rows.find(r=>r._id===id))
+    :state.cmp.map(n=>companies(rows.filter(r=>r['Empresa']===n))[0]);
+  const lists=isSol?[['Categoría',x=>x._cats,catTag],['Área estándar',x=>x._area],['KPI estándar',x=>x._kpi],['Tecnología',x=>x._tec]]
+    :[['Categoría',x=>[...x.cats],catTag],['Área estándar',x=>[...x.area]],['KPI estándar',x=>[...x.kpi]],['Tecnología',x=>[...x.tec]]];
+  const common=get=>items.map(get).reduce((a,b)=>a.filter(v=>b.includes(v)));
+  const tagRow=([label,get,fmt])=>{const cm=common(get);
+    return `<tr><th scope="row">${label}</th>${items.map(x=>`<td><div class="tags">${get(x).map(v=>fmt&&!cm.includes(v)?fmt(v):`<span class="tag ${cm.includes(v)?'common':''}">${esc(v)}</span>`).join('')}</div></td>`).join('')}</tr>`;};
+  let head, body;
+  if(isSol){
+    head=items.map(r=>`<th scope="col">${esc(r['Solución'])}<small>${esc(r['Empresa'])} · ${esc(r['Expedición'])}</small></th>`).join('');
+    body=`<tr class="group"><th colspan="${items.length+1}">Estándar de comparación</th></tr>`+lists.map(tagRow).join('')+
+      `<tr><th scope="row">Evidencia de impacto</th>${items.map(r=>`<td>${evBadge(r._ev)}</td>`).join('')}</tr>`+
+      `<tr class="group"><th colspan="${items.length+1}">Ficha de la solución</th></tr>`+
+      FIELDS.map(f=>`<tr><th scope="row">${esc(f)}</th>${items.map(r=>`<td>${(r[f]||'').trim()?esc(r[f]):'<span class="na">Sin dato</span>'}</td>`).join('')}</tr>`).join('');
+  }else{
+    head=items.map(e=>`<th scope="col">${esc(e.name)}<small>${esc(e.exp)}</small></th>`).join('');
+    body=`<tr class="group"><th colspan="${items.length+1}">Estándar de comparación</th></tr>`+lists.map(tagRow).join('')+
+      `<tr><th scope="row">Evidencia de impacto</th>${items.map(e=>`<td>${evBadge(e.best)}<div style="font-size:12px;color:var(--muted)">${EV_ORDER.filter(l=>e.ev[l]).map(l=>`${e.ev[l]} ${l.toLowerCase()}`).join(' · ')}</div></td>`).join('')}</tr>`+
+      `<tr><th scope="row">N° de soluciones</th>${items.map(e=>`<td>${e.sols.length}</td>`).join('')}</tr>`+
+      `<tr class="group"><th colspan="${items.length+1}">Soluciones</th></tr>`+
+      `<tr><th scope="row">Soluciones</th>${items.map(e=>`<td><div class="mini">${e.sols.map(r=>`<button type="button" data-open="${r._id}">${esc(r['Solución'])}</button>`).join('')}</div></td>`).join('')}</tr>`+
+      `<tr><th scope="row">Métricas de impacto</th>${items.map(e=>`<td>${e.sols.map(r=>r['Métrica de Impacto Cuantitativa']?`• ${esc(r['Métrica de Impacto Cuantitativa'])}`:'').filter(Boolean).join('\n')||'<span class="na">Sin dato</span>'}</td>`).join('')}</tr>`+
+      `<tr><th scope="row">Enlaces</th>${items.map(e=>`<td><div class="d-links">${e.ficha?`<a href="${esc(e.ficha)}" target="_blank" rel="noopener">Ficha ↗</a>`:''}${e.web?`<a href="${esc(e.web)}" target="_blank" rel="noopener">Sitio ↗</a>`:''}</div></td>`).join('')}</tr>`;
+  }
+  $('c-title').textContent=isSol?'Comparación de soluciones':'Comparación de empresas';
+  $('c-body').innerHTML=`<table class="side"><thead><tr><th></th>${head}</tr></thead><tbody>${body}</tbody></table>`;
+  const d=$('compare'); if(!d.open) d.showModal();
+}
+
+// ---------- Render y navegación ----------
+function render(){
+  const list=filtered();
+  renderStats(list);
+  if(state.view==='soluciones') renderGrid(list);
+  if(state.view==='comparar') renderMatrix(list);
+  if(state.view==='empresas') renderCompanies(list);
+}
+function update(){ buildControls(); render(); }
+function route(){
+  const v=location.hash.slice(1);
+  state.view=['soluciones','comparar','empresas'].includes(v)?v:'soluciones';
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.view===state.view));
+  ['soluciones','comparar','empresas'].forEach(v=>$('view-'+v).hidden=v!==state.view);
+}
+window.addEventListener('hashchange',()=>{route();render();});
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{ if(location.hash!=='#'+t.dataset.view) location.hash=t.dataset.view; else {route();render();} });
+
+let timer; $('q').addEventListener('input',e=>{clearTimeout(timer); timer=setTimeout(()=>{state.q=e.target.value.trim(); update();},120);});
+[['f-exp','exp'],['f-emp','emp'],['f-area','area'],['f-kpi','kpi'],['f-tec','tec']].forEach(([id,k])=>$(id).onchange=e=>{state[k]=e.target.value; update();});
+$('f-cat').onclick=e=>{const b=e.target.closest('.chip'); if(!b) return; const v=b.dataset.v; state.cats.has(v)?state.cats.delete(v):state.cats.add(v); update();};
+$('f-ev').onclick=e=>{const b=e.target.closest('.chip'); if(!b) return; const v=b.dataset.v; state.evs.has(v)?state.evs.delete(v):state.evs.add(v); update();};
+$('clear').onclick=()=>{Object.assign(state,{q:'',exp:'',emp:'',area:'',kpi:'',tec:'',cats:new Set(),evs:new Set(),cell:null}); $('q').value=''; update();};
+$('m-rows').onchange=e=>{state.mRows=e.target.value; state.cell=null; render();};
+$('m-cols').onchange=e=>{state.mCols=e.target.value; state.cell=null; render();};
+$('m-measure').onchange=e=>{state.measure=e.target.value; render();};
+$('matrix').onclick=e=>{const b=e.target.closest('button[data-cell]'); if(!b||b.dataset.v==='0') return; state.cell=state.cell===b.dataset.cell?null:b.dataset.cell; render();};
+$('emp-table').onclick=e=>{
+  const s=e.target.closest('[data-sort]'); if(s){ const k=s.dataset.sort; state.sortDir=state.sortKey===k?-state.sortDir:(['n','area','kpi','tec','ev'].includes(k)?-1:1); state.sortKey=k; render(); return; }
+  const n=e.target.closest('[data-emp]'); if(n){ state.emp=n.dataset.emp; location.hash='soluciones'; update(); return; }
+};
+document.addEventListener('click',e=>{
+  const o=e.target.closest('[data-open]'); if(o){ openDetail(o.dataset.open); return; }
+  const cs=e.target.closest('[data-cmp-sol]'); if(cs){ toggleCmp('sol',+cs.dataset.cmpSol); return; }
+  const ce=e.target.closest('[data-cmp-emp]'); if(ce){ toggleCmp('emp',ce.dataset.cmpEmp); return; }
+  const u=e.target.closest('[data-untray]'); if(u){ const id=state.cmpType==='sol'?+u.dataset.untray:u.dataset.untray; toggleCmp(state.cmpType,id); return; }
+  const c=e.target.closest('[data-close]'); if(c){ c.closest('dialog').close(); }
+});
+$('tray-clear').onclick=()=>{state.cmp=[]; state.cmpType=null; renderTray(); render();};
+$('tray-go').onclick=openCompare;
+document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{ if(e.target===d) d.close(); }));
+
+load();
+</script>
+</body>
+</html>
